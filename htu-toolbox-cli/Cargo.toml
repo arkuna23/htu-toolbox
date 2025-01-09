@@ -1,0 +1,15 @@
+[package]
+name = "htu-toolbox-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+htu-toolbox-lib = { path = "../htu-toolbox-lib"}
+dialoguer = "0.11"
+clap = { version = "4", features = ["derive"]}
+console = "0.15"
+serde = "1"
+dirs = "5"
+toml = "0.8"
+eyre = { version = "0.6"}
+color-eyre = "0.6"
