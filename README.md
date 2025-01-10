@@ -16,9 +16,13 @@
 
 ### 安装
 
--   使用`cargo install`
+-   从release下载
 
-需要保证你的系统安装了rust工具链。
+在[release页](https://github.com/arkuna23/htu-toolbox/releases)根据你的操作系统下载可用的可执行文件
+
+-   或是使用`cargo install`
+
+需要确保你安装了rust工具链。
 
 ```bash
 cargo install htu-toolbox-cli --git https://github.com/arkuna23/htu-toolbox
