@@ -35,7 +35,7 @@ impl SubCmd {
                         operator: Some(operator),
                     }),
             } => {
-                if htu_toolbox_lib::net::ping() {
+                if htu_toolbox_lib::net::ping().is_ok() {
                     println!(
                         "{} {}",
                         Emoji::new("✅", "[!]"),
@@ -61,7 +61,7 @@ impl SubCmd {
                     eyre::bail!(
                         "校园网登录失败, 错误码 {}, 错误消息: {}",
                         result.code,
-                        result.message
+                        result.message.unwrap_or_default()
                     )
                 }
 

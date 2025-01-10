@@ -48,7 +48,7 @@ impl FromStr for Operator {
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct AuthResponse {
     pub code: String,
-    pub message: String,
+    pub message: Option<String>,
 }
 
 impl AuthResponse {
@@ -107,8 +107,14 @@ impl AuthRequest {
             .append_pair("userid", &userid)
             .append_pair("passwd", passwd.as_ref());
 
-        let resp = http::curl_json(url.as_str())?;
-        Ok(resp.data)
+        let resp = http::curl(url.as_str())?;
+        let data = serde_json::from_slice(&resp.data)
+            .map_err(|e| 
+                crate::Error::other(
+                    format!("{e}: {}", String::from_utf8_lossy(&resp.data).as_ref())
+                )
+            )?;
+        Ok(data)
     }
 }
 
@@ -124,8 +130,18 @@ impl LogoutResponse {
     }
 }
 
-pub fn ping() -> bool {
-    http::curl(Request::builder("www.baidu.com").timeout(Duration::from_millis(500))).is_ok()
+pub fn ping() -> std::io::Result<()> {
+    use std::{
+        io::{Read, Write},
+        net::TcpStream,
+    };
+    let mut socket = TcpStream::connect(("www.baidu.com", 80))?;
+    socket.set_read_timeout(Some(std::time::Duration::from_millis(500)))?;
+    socket.set_write_timeout(Some(std::time::Duration::from_millis(500)))?;
+    socket.write_all(b"GET / HTTP/1.0\r\n\r\n")?;
+    let mut buffer = [0; 1];
+    socket.read_exact(&mut buffer)?;
+    Ok(())
 }
 
 pub fn logout() -> Result<LogoutResponse> {
