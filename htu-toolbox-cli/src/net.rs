@@ -1,22 +1,38 @@
 use dialoguer::{theme::ColorfulTheme, Input, Password, Select};
-use htu_toolbox_lib::{config::NetLoginAccount, login::Operator};
+use htu_toolbox_lib::{config::NetLoginAccount, net::Operator};
+
+#[derive(Debug, clap::Subcommand, Clone)]
+pub enum Net {
+    /// 登录校园网
+    Login(NetAccArgs),
+    /// 登出校园网
+    Logout,
+    /// 设定校园网账号
+    Set(NetAccArgs),
+}
 
 #[derive(Debug, Clone, clap::Args)]
-pub struct NetLoginArgs {
+pub struct NetAccArgs {
+    /// 学号
     #[clap(long, short, requires_all = ["password", "operator"])]
     pub id: Option<String>,
+    /// 密码
     #[clap(long, short)]
     pub password: Option<String>,
+    /// 运营商
     #[clap(long, short)]
     pub operator: Option<OperatorArg>,
 }
 
 #[derive(Debug, Clone, Copy, clap::ValueEnum)]
 pub enum OperatorArg {
+    /// 中国移动
     #[clap(name = "yd")]
     Mobie,
+    /// 中国联通
     #[clap(name = "lt")]
     Unicom,
+    /// 中国电信
     #[clap(name = "dx")]
     Telecom,
 }

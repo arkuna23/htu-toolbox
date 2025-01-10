@@ -1,8 +1,8 @@
 use std::{fmt::Display, string::FromUtf8Error};
 
-pub mod http;
-pub mod login;
 pub mod config;
+pub mod http;
+pub mod net;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {

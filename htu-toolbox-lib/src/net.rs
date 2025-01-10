@@ -124,9 +124,15 @@ impl LogoutResponse {
     }
 }
 
+pub fn ping() -> bool {
+    http::curl(Request::builder("www.baidu.com").timeout(Duration::from_millis(500))).is_ok()
+}
+
 pub fn logout() -> Result<LogoutResponse> {
     Ok(http::curl_json(
-        Request::builder("http://10.101.2.205/loginOut").method(http::Method::Post(&[])),
+        Request::builder("http://10.101.2.205/loginOut")
+            .method(http::Method::Post(&[]))
+            .timeout(Duration::from_secs(2)),
     )?
     .data)
 }

@@ -5,7 +5,7 @@ use eyre::OptionExt;
 use htu_toolbox_lib::config::*;
 use serde::{Deserialize, Serialize};
 
-use crate::net_login::{self, NetLoginArgs};
+use crate::net::{self, Net, NetAccArgs};
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 #[serde(rename_all = "kebab-case")]
@@ -17,10 +17,10 @@ pub struct Config {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "kebab-case")]
 pub struct NetLoginCfg {
-    account: NetLoginAccount,
+    pub account: NetLoginAccount,
 }
 
-impl From<NetLoginCfg> for NetLoginArgs {
+impl From<NetLoginCfg> for NetAccArgs {
     fn from(value: NetLoginCfg) -> Self {
         let NetLoginAccount {
             id,
@@ -51,11 +51,13 @@ impl Config {
                     eyre::bail!("配置缺失")
                 };
 
-                Ok(super::SubCmd::NetLogin(NetLoginArgs {
-                    id: Some(account.id),
-                    password: Some(account.password),
-                    operator: Some(account.operator.into()),
-                }))
+                Ok(super::SubCmd::Net {
+                    cmd: Net::Login(NetAccArgs {
+                        id: Some(account.id),
+                        password: Some(account.password),
+                        operator: Some(account.operator.into()),
+                    }),
+                })
             }
         }
     }
@@ -67,7 +69,7 @@ impl Config {
             .join("config.toml"))
     }
 
-    pub fn init() -> eyre::Result<Self> {
+    pub fn load() -> eyre::Result<Self> {
         let path = Self::cfg_path()?;
         std::fs::create_dir_all(path.parent().unwrap())?;
         let config;
@@ -95,7 +97,7 @@ impl Config {
                 "{}",
                 style("未设置校园网账号，进入设置向导").yellow().bold()
             );
-            let account = net_login::account_guide()?;
+            let account = net::account_guide()?;
             self.net_login = Some(NetLoginCfg { account });
             self.save()?;
         }

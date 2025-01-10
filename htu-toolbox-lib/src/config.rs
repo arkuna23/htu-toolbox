@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::login::Operator;
+use crate::net::Operator;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NetLoginAccount {

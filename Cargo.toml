@@ -1,3 +1,7 @@
 [workspace]
 resolver = "2"
 members = [ "htu-toolbox-cli","htu-toolbox-lib"]
+
+[profile.release]
+lto = true
+codegen-units = 1
