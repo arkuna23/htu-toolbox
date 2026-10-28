@@ -2,6 +2,9 @@
 resolver = "2"
 members = [ "htu-toolbox-cli","htu-toolbox-lib"]
 
+[workspace.package]
+version = "2.0.0"
+
 [profile.release]
 lto = true
 codegen-units = 1

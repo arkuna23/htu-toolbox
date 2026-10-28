@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="zh-CN" class="dark" data-theme="dark" data-palette="iris" data-density="standard">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="htu-token" content="{{HTU_TOKEN}}" />
+    <meta name="theme-color" content="#141218" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="HTU 校园工具箱：校园网连接、自动登录与运行日志。" />
+    <title>HTU Toolbox · 总览</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/theme-init.js"></script>
+  </head>
+  <body>
+    <!-- Lucide fallback sprite; upgraded locally by Morphicons. -->
+    <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-overview" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+      <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></symbol>
+      <symbol id="i-key" viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></symbol>
+      <symbol id="i-log" viewBox="0 0 24 24"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></symbol>
+      <symbol id="i-stop" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/></symbol>
+      <symbol id="i-logout" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></symbol>
+      <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></symbol>
+      <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></symbol>
+      <symbol id="i-layout" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></symbol>
+      <symbol id="i-zap" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+      <symbol id="i-loading" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></symbol>
+    </svg>
+    <a class="skip-link" href="#mainContent">跳到主要内容</a>
+
+    <div class="app">
+      <div class="app-atmosphere" aria-hidden="true"></div>
+
+      <!-- Desktop sidebar: brand, grouped nav, live status card. -->
+      <aside class="sidebar" id="sidebar" aria-label="工具箱导航">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">H</span>
+          <span class="brand-text">
+            <span class="brand-name">HTU Toolbox</span>
+            <span class="brand-tag">校园工具箱</span>
+          </span>
+        </div>
+        <nav class="nav" aria-label="主导航">
+          <div class="nav-inner">
+            <div>
+              <p class="nav-group-label">控制台</p>
+              <ul class="nav-group-list">
+                <li><a class="nav-item active" href="#overview" data-nav="overview" aria-current="page" aria-label="总览" title="总览"><svg class="nav-icon" data-icon="overview" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-overview"/></svg><span class="nav-text">总览</span></a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="nav-group-label">校园服务</p>
+              <ul class="nav-group-list">
+                <li><a class="nav-item" href="#network" data-nav="network" aria-label="校园网" title="校园网"><svg class="nav-icon" data-icon="wifi" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wifi"/></svg><span class="nav-text">校园网</span><span class="chip chip-accent nav-badge" id="navNetworkBadge">未配置</span></a></li>
+                <li><a class="nav-item" href="#account" data-nav="account" aria-label="账号设置" title="账号设置"><svg class="nav-icon" data-icon="key" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg><span class="nav-text">账号设置</span></a></li>
+                <li><a class="nav-item" href="#logs" data-nav="logs" aria-label="运行日志" title="运行日志"><svg class="nav-icon" data-icon="log" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-log"/></svg><span class="nav-text">运行日志</span></a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="nav-group-label">工作区</p>
+              <ul class="nav-group-list">
+                <li><a class="nav-item" href="#guide" data-nav="guide" aria-label="使用指南" title="使用指南"><svg class="nav-icon" data-icon="help" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-help"/></svg><span class="nav-text">使用指南</span></a></li>
+                <li><button class="nav-item" type="button" data-open-settings aria-label="工作区设置" title="工作区设置"><svg class="nav-icon" data-icon="sliders" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg><span class="nav-text">工作区设置</span></button></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <div class="sidebar-footer">
+          <section class="status-card hud-frame" aria-label="本机服务状态">
+            <div class="status-card-head">
+              <span class="chip-dot chip-warning" id="serviceDot"></span>
+              <strong id="serviceState">正在连接</strong>
+              <span class="num" id="transportLabel">LOCAL</span>
+            </div>
+            <div class="status-tiles">
+              <div class="status-tile"><span>网络</span><strong id="sidebarNetwork">—</strong></div>
+              <div class="status-tile"><span>自动登录</span><strong id="sidebarTask">—</strong></div>
+              <div class="status-tile"><span>间隔</span><strong class="num" id="sidebarInterval">—</strong></div>
+            </div>
+            <div class="status-card-foot">
+              <span id="platformBadge">本机服务</span>
+              <span class="num" id="sidebarUpdate">等待状态</span>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <!-- Narrow-screen drawer, filled from the sidebar markup at runtime. -->
+      <div id="sidebarScrim" class="sidebar-scrim" hidden></div>
+      <aside id="sidebarDrawer" class="sidebar-drawer" aria-label="工具箱导航" hidden></aside>
+
+      <div class="content">
+        <header class="topbar">
+          <button id="menuButton" class="btn btn-ghost btn-icon lg-hidden" type="button" aria-label="打开导航" aria-controls="sidebar" aria-expanded="false"><svg data-icon="menu" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-menu"/></svg></button>
+          <div class="breadcrumb">
+            <span class="brand-mark brand-mark-sm" aria-hidden="true">H</span>
+            <span class="breadcrumb-root">HTU Toolbox</span>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current" id="breadcrumbPage">总览</span>
+          </div>
+          <div class="topbar-spacer"></div>
+          <button id="searchButton" class="search-trigger" type="button" aria-label="搜索页面区块" aria-haspopup="dialog">
+            <svg data-icon="search" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg><span>搜索页面区块…</span><kbd>Ctrl K</kbd>
+          </button>
+          <button id="mobileSearchButton" class="btn btn-ghost btn-icon mobile-only" type="button" aria-label="搜索页面区块"><svg data-icon="search" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg></button>
+          <span id="topService" class="chip chip-warning chip-pulse"><span class="chip-dot"></span><span id="topServiceText">正在连接</span></span>
+          <div class="topbar-actions">
+            <button id="themeButton" class="btn btn-ghost btn-icon" type="button" aria-label="切换主题" title="切换主题"><svg data-icon="moon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-moon"/></svg></button>
+            <button id="settingsButton" class="btn btn-ghost btn-icon" type="button" aria-label="工作区设置" title="工作区设置"><svg data-icon="sliders" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg></button>
+          </div>
+        </header>
+
+        <main class="main" id="mainContent" tabindex="-1">
+          <div class="main-inner">
+
+            <!-- ======================================================= 总览 -->
+            <section id="overviewView" class="page" data-page="overview" aria-labelledby="overviewTitle">
+              <header class="page-head">
+                <div>
+                  <p class="eyebrow">控制台</p>
+                  <h1 class="page-title" id="overviewTitle">总览</h1>
+                  <p class="page-desc">实时连接状态、自动登录与校园服务入口。</p>
+                </div>
+                <span class="chip" id="overviewUpdated">等待状态</span>
+              </header>
+
+              <div class="cols cols-12">
+                <div class="span-8 stack stagger">
+                  <section class="panel hud-frame">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="wifi" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wifi"/></svg></span>
+                      <div class="panel-head-text">
+                        <h2 class="panel-title">连接状态</h2>
+                        <p class="panel-sub">来自本机服务的最近一次检测结果</p>
+                      </div>
+                      <span id="overviewNetworkBadge" class="chip">尚未检测</span>
+                    </div>
+                    <div class="stat-grid stat-grid-3 border-top">
+                      <div class="stat"><span class="stat-axis stat-axis-x"></span><span class="stat-label">网络</span><strong class="stat-value num-text" id="overviewNetwork">—</strong></div>
+                      <div class="stat"><span class="stat-axis stat-axis-y"></span><span class="stat-label">自动登录</span><strong class="stat-value num-text" id="overviewTask">—</strong></div>
+                      <div class="stat"><span class="stat-axis stat-axis-z"></span><span class="stat-label">下次检测</span><strong class="stat-value num-text" id="overviewNextRun">—</strong></div>
+                    </div>
+                    <div class="panel-body row-flex">
+                      <div class="grow">
+                        <p class="row-title" id="overviewNetworkHint">进入校园网，配置账号或检测连接。</p>
+                        <p class="row-desc" id="overviewLastRun">暂无检测记录</p>
+                      </div>
+                      <div class="meter" id="overviewMeter" data-level="0" aria-hidden="true">
+                        <span class="meter-seg"></span><span class="meter-seg"></span><span class="meter-seg"></span><span class="meter-seg"></span><span class="meter-seg"></span>
+                      </div>
+                    </div>
+                    <div class="panel-foot">
+                      <span>状态来自本机服务</span>
+                      <a class="text-link" href="#network">管理校园网<svg data-icon="arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                    </div>
+                  </section>
+
+                  <section class="panel">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="zap" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zap"/></svg></span>
+                      <div class="panel-head-text">
+                        <h2 class="panel-title">快速操作</h2>
+                        <p class="panel-sub">检测网络、提交认证或启停自动登录</p>
+                      </div>
+                    </div>
+                    <div class="panel-body grid-auto-sm">
+                      <button class="btn btn-primary" type="button" data-action="check"><svg data-icon="refresh" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg><span>立即检测</span></button>
+                      <button class="btn btn-secondary" type="button" data-action="login"><svg data-icon="arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span>立即登录</span></button>
+                      <button class="btn btn-secondary" type="button" data-action="start"><svg data-icon="play" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>启动自动登录</span></button>
+                      <button class="btn btn-secondary" type="button" data-action="stop"><svg data-icon="stop" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stop"/></svg><span>停止自动登录</span></button>
+                    </div>
+                    <div class="panel-foot"><span>最近一次操作</span><span id="overviewLastResult" class="num-text">—</span></div>
+                  </section>
+                </div>
+
+                <div class="span-4 stack stagger">
+                  <section class="panel">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="globe" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-globe"/></svg></span>
+                      <div class="panel-head-text"><h2 class="panel-title">本机信息</h2></div>
+                    </div>
+                    <div class="rows border-top">
+                      <div class="row row-tight"><span class="row-desc mb0">运行平台</span><strong class="num-text fs-sm" id="infoPlatform">—</strong></div>
+                      <div class="row row-tight"><span class="row-desc mb0">密码存储</span><strong class="num-text fs-sm" id="infoStorage">—</strong></div>
+                      <div class="row row-tight"><span class="row-desc mb0">账号</span><strong class="num-text fs-sm" id="infoAccount">未配置</strong></div>
+                      <div class="row row-tight"><span class="row-desc mb0">门户</span><strong class="num-text fs-sm" id="infoPortal">—</strong></div>
+                    </div>
+                  </section>
+
+                  <section class="panel">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="key" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg></span>
+                      <div class="panel-head-text"><h2 class="panel-title">快捷入口</h2></div>
+                    </div>
+                    <div class="panel-body stack-sm">
+                      <a class="search-item" href="#account"><span class="icon-tile"><svg data-icon="key" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg></span><span class="search-item-text"><strong>账号设置</strong><small>账号、运营商与门户地址</small></span><span class="enter-hint">↵</span></a>
+                      <a class="search-item" href="#logs"><span class="icon-tile"><svg data-icon="log" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-log"/></svg></span><span class="search-item-text"><strong>运行日志</strong><small>查看与导出最近记录</small></span><span class="enter-hint">↵</span></a>
+                      <a class="search-item" href="#guide"><span class="icon-tile"><svg data-icon="help" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-help"/></svg></span><span class="search-item-text"><strong>使用指南</strong><small>连接、检测与后台运行</small></span><span class="enter-hint">↵</span></a>
+                    </div>
+                  </section>
+
+                  <section class="panel">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="shield" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg></span>
+                      <div class="panel-head-text"><h2 class="panel-title">本地优先</h2></div>
+                    </div>
+                    <div class="panel-body"><p class="row-desc mb0">账号配置保存在本机，密码加密存储，页面不会返回已存密码。</p></div>
+                  </section>
+                </div>
+              </div>
+            </section>
+
+            <!-- ===================================================== 校园网 -->
+            <section id="networkView" class="page" data-page="network" aria-labelledby="networkTitle" hidden>
+              <header class="page-head">
+                <div>
+                  <p class="eyebrow">校园服务 · 网络</p>
+                  <h1 class="page-title" id="networkTitle">校园网</h1>
+                  <p class="page-desc">配置上网账号、管理自动登录，让连接更省心。</p>
+                </div>
+                <div class="inline-flex">
+                  <span id="connectionPill" class="chip"><span class="chip-dot"></span><span id="connectionText">正在连接服务</span></span>
+                  <span class="num fs-xs subtle" id="lastUpdate">等待读取状态</span>
+                </div>
+              </header>
+
+              <div class="cols cols-12">
+                <div class="span-8 stack stagger">
+                  <section id="accountPanel" class="panel" tabindex="-1">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="key" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg></span>
+                      <div class="panel-head-text">
+                        <h2 class="panel-title">账号设置</h2>
+                        <p class="panel-sub">设置登录账号、门户地址和检测间隔</p>
+                      </div>
+                      <span class="chip">01</span>
+                    </div>
+                    <form id="configForm" class="panel-body stack-md">
+                      <div class="grid-auto-md">
+                        <label class="field"><span class="field-label">上网账号</span><input class="input" id="accountInput" name="account" autocomplete="username" maxlength="64" placeholder="输入学号或上网账号" required /></label>
+                        <div class="field">
+                          <span class="field-label">运营商</span>
+                          <div class="segmented" role="radiogroup" aria-label="运营商" data-operator-group>
+                            <button class="segmented-option" type="button" role="radio" data-value="lt" aria-checked="true">中国联通</button>
+                            <button class="segmented-option" type="button" role="radio" data-value="yd" aria-checked="false">中国移动</button>
+                            <button class="segmented-option" type="button" role="radio" data-value="dx" aria-checked="false">中国电信</button>
+                            <button class="segmented-option" type="button" role="radio" data-value="hsd" aria-checked="false">校园本地</button>
+                          </div>
+                          <input type="hidden" id="operatorSelect" name="operator" value="lt" />
+                        </div>
+                      </div>
+                      <label class="field"><span class="field-label-row"><span class="field-label">上网密码</span><small class="field-hint" id="passwordConfigured">首次配置必填</small></span><input class="input" id="passwordInput" name="password" type="password" autocomplete="current-password" maxlength="128" placeholder="输入上网密码" required /></label>
+                      <div class="field">
+                        <div class="field-label-row">
+                          <label class="field-label" for="portalInput">校园门户地址</label>
+                          <button id="detectPortalButton" class="btn btn-ghost btn-xs" type="button"><svg data-icon="refresh" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg>自动获取</button>
+                        </div>
+                        <textarea class="input" id="portalInput" name="portalUrl" rows="3" placeholder="http://10.101.2.194:6060/portal.do?..." required></textarea>
+                        <p class="field-hint">连接校园网后获取，或粘贴完整门户地址（含查询参数）。</p>
+                      </div>
+                      <div class="grid-auto-md-end">
+                        <label class="field"><span class="field-label">检测间隔（秒）</span><input class="input" id="intervalInput" type="number" min="5" max="3600" step="1" value="10" required /></label>
+                        <div class="row flush">
+                          <div class="row-text"><p class="row-title">系统启动时恢复</p><p class="row-desc">登录系统后自动恢复自动登录</p></div>
+                          <button class="switch" type="button" role="switch" id="autoStartSwitch" aria-checked="false" aria-label="系统启动时恢复"><span class="switch-knob"></span></button>
+                          <input type="checkbox" id="autoStartInput" hidden />
+                        </div>
+                      </div>
+                      <button id="saveButton" class="btn btn-primary btn-lg w-full" type="submit">保存并连接</button>
+                      <p id="storageHint" class="field-hint text-center">账号配置保存在本机，密码加密存储。</p>
+                    </form>
+                  </section>
+
+                  <section id="logPanel" class="panel" tabindex="-1">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="log" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-log"/></svg></span>
+                      <div class="panel-head-text">
+                        <h2 class="panel-title">运行日志</h2>
+                        <p class="panel-sub" id="logMeta">等待读取</p>
+                      </div>
+                      <div class="panel-actions">
+                        <span class="field-hint fs-xs">自动刷新</span>
+                        <button id="autoRefreshSwitch" class="switch" type="button" role="switch" aria-checked="true" aria-label="自动刷新"><span class="switch-knob"></span></button>
+                      </div>
+                    </div>
+                    <div class="panel-body">
+                      <div class="panel-actions wrap mb-sm">
+                        <div class="segmented segmented-compact" role="radiogroup" aria-label="日志行数" data-log-tail>
+                          <button class="segmented-option" type="button" role="radio" data-value="100" aria-checked="false">100 行</button>
+                          <button class="segmented-option" type="button" role="radio" data-value="250" aria-checked="true">250 行</button>
+                          <button class="segmented-option" type="button" role="radio" data-value="1000" aria-checked="false">1000 行</button>
+                        </div>
+                        <input type="hidden" id="logTail" value="250" />
+                        <div class="topbar-spacer"></div>
+                        <button id="downloadLogButton" class="btn btn-secondary btn-sm" type="button">导出日志</button>
+                        <button id="toggleLogButton" class="btn btn-secondary btn-sm" type="button" aria-controls="logOutput" aria-expanded="true">收起</button>
+                      </div>
+                      <div class="log grid-texture">
+                        <pre id="logOutput" class="log-output" tabindex="0">暂无记录</pre>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="span-4 stack stagger">
+                  <section id="controlsPanel" class="panel" tabindex="-1">
+                    <div class="panel-head">
+                      <span class="icon-tile"><svg data-icon="sliders" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg></span>
+                      <div class="panel-head-text">
+                        <h2 class="panel-title">登录控制</h2>
+                        <p class="panel-sub">检测网络、手动登录或启停自动登录</p>
+                      </div>
+                      <span class="chip">02</span>
+                    </div>
+                    <div class="panel-body grid-2">
+                      <button class="btn btn-soft" type="button" data-action="check"><svg data-icon="refresh" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg><span>立即检测</span></button>
+                      <button class="btn btn-secondary" type="button" data-action="login"><svg data-icon="arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span>立即登录</span></button>
+                      <button class="btn btn-secondary" type="button" data-action="start"><svg data-icon="play" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>启动自动登录</span></button>
+                      <button class="btn btn-secondary" type="button" data-action="stop"><svg data-icon="stop" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stop"/></svg><span>停止自动登录</span></button>
+                      <button class="btn btn-danger span-full" type="button" data-action="logout"><svg data-icon="logout" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logout"/></svg><span>登出校园网</span></button>
+                    </div>
+                    <div class="panel-body border-top-pad">
+                      <p class="stat-label mb-xs">最近一次操作</p>
+                      <p id="lastResult" class="row-desc mb0" aria-live="polite">暂无检测结果</p>
+                    </div>
+                    <div class="panel-foot"><span id="platformHint">关闭浏览器后，后台服务仍会运行。</span></div>
+                  </section>
+                </div>
+              </div>
+            </section>
+
+            <!-- ======================================================= 指南 -->
+            <section id="guideView" class="page" data-page="guide" aria-labelledby="guideTitle" hidden>
+              <header class="page-head">
+                <div>
+                  <p class="eyebrow">工作区 · 指南</p>
+                  <h1 class="page-title" id="guideTitle">使用指南</h1>
+                  <p class="page-desc">连接、认证与后台运行的完整说明。</p>
+                </div>
+              </header>
+              <div class="cols cols-2">
+                <section class="panel">
+                  <div class="panel-head"><span class="icon-tile"><svg data-icon="wifi" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wifi"/></svg></span><div class="panel-head-text"><h2 class="panel-title">连接校园网</h2></div><span class="chip">01</span></div>
+                  <div class="panel-body"><p class="row-desc mb0">连接校园网络后，进入「校园网」，填写账号与运营商，点击「自动获取」门户地址。首次配置需要密码；以后留空会保留已存密码。点击「保存并连接」开启后台检测。</p></div>
+                </section>
+                <section class="panel">
+                  <div class="panel-head"><span class="icon-tile"><svg data-icon="play" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg></span><div class="panel-head-text"><h2 class="panel-title">检测、登录与停止</h2></div><span class="chip">02</span></div>
+                  <div class="panel-body"><p class="row-desc mb0">「立即检测」只检查网络。「立即登录」提交一次认证，页面分别判断认证是否接受和公网是否联网。「停止自动登录」保存暂停状态，不会登出校园网。</p></div>
+                </section>
+                <section class="panel">
+                  <div class="panel-head"><span class="icon-tile"><svg data-icon="zap" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zap"/></svg></span><div class="panel-head-text"><h2 class="panel-title">后台运行与系统自启</h2></div><span class="chip">03</span></div>
+                  <div class="panel-body"><p class="row-desc mb0">关闭浏览器不会停止服务；退出服务进程才会结束后台运行。系统自启需要在本机安装用户服务，并开启「系统启动时恢复」。只有自动登录未暂停时才会恢复。</p><p class="row-desc">系统服务安装和迁移步骤请参阅发布包中的 README。</p></div>
+                </section>
+                <section class="panel">
+                  <div class="panel-head"><span class="icon-tile"><svg data-icon="log" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-log"/></svg></span><div class="panel-head-text"><h2 class="panel-title">切换网络与日志</h2></div><span class="chip">04</span></div>
+                  <div class="panel-body"><p class="row-desc mb0">门户参数可能随网络变化失效，请重新获取并保存完整地址。日志支持查看最近 100、250 或 1000 行；导出的是当前已显示的内容。</p></div>
+                </section>
+              </div>
+              <section class="panel">
+                <div class="panel-head"><span class="icon-tile"><svg data-icon="shield" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg></span><div class="panel-head-text"><h2 class="panel-title">工作区设置</h2><p class="panel-sub">外观、布局与动效偏好只保存在此浏览器中</p></div></div>
+                <div class="panel-body row-flex">
+                  <p class="row-desc grow-14">主题、源色、密度和动效偏好不会发送到本机服务，也不会影响账号配置。</p>
+                  <button class="btn btn-primary" type="button" data-open-settings><svg data-icon="sliders" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg><span>打开工作区设置</span></button>
+                </div>
+              </section>
+            </section>
+
+            <!-- ======================================================= 日志 -->
+            <section id="logsView" class="page" data-page="logs" aria-labelledby="logsTitle" hidden>
+              <header class="page-head">
+                <div>
+                  <p class="eyebrow">校园服务 · 日志</p>
+                  <h1 class="page-title" id="logsTitle">运行日志</h1>
+                  <p class="page-desc">查看与导出本机服务的最近记录。</p>
+                </div>
+                <div class="inline-flex">
+                  <button id="downloadLogButton2" class="btn btn-secondary" type="button">导出日志</button>
+                  <button id="refreshLogsButton" class="btn btn-ghost btn-icon" type="button" aria-label="刷新日志"><svg data-icon="refresh" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+                </div>
+              </header>
+              <section class="panel">
+                <div class="panel-head">
+                  <span class="icon-tile"><svg data-icon="log" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-log"/></svg></span>
+                  <div class="panel-head-text"><h2 class="panel-title">最近记录</h2><p class="panel-sub" id="logMeta2">等待读取</p></div>
+                  <div class="panel-actions">
+                    <div class="segmented segmented-compact" role="radiogroup" aria-label="日志行数" data-log-tail>
+                      <button class="segmented-option" type="button" role="radio" data-value="100" aria-checked="false">100 行</button>
+                      <button class="segmented-option" type="button" role="radio" data-value="250" aria-checked="true">250 行</button>
+                      <button class="segmented-option" type="button" role="radio" data-value="1000" aria-checked="false">1000 行</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="log grid-texture log-tall-host">
+                    <pre id="logOutput2" class="log-output log-tall" tabindex="0">暂无记录</pre>
+                  </div>
+                </div>
+              </section>
+            </section>
+
+            <!-- ======================================================= 账号 -->
+            <section id="accountView" class="page" data-page="account" aria-labelledby="accountTitle" hidden>
+              <header class="page-head">
+                <div>
+                  <p class="eyebrow">校园服务 · 账号</p>
+                  <h1 class="page-title" id="accountTitle">账号设置</h1>
+                  <p class="page-desc">上网账号、运营商、门户地址与检测间隔。</p>
+                </div>
+              </header>
+              <div class="cols cols-side">
+                <section class="panel">
+                  <div class="panel-head"><span class="icon-tile"><svg data-icon="key" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg></span><div class="panel-head-text"><h2 class="panel-title">配置</h2><p class="panel-sub">修改后需要保存才能生效</p></div></div>
+                  <form id="configForm2" class="panel-body stack-md">
+                    <div class="grid-auto-md">
+                      <label class="field"><span class="field-label">上网账号</span><input class="input" id="accountInput2" autocomplete="username" maxlength="64" placeholder="输入学号或上网账号" required /></label>
+                      <div class="field">
+                        <span class="field-label">运营商</span>
+                        <div class="segmented" role="radiogroup" aria-label="运营商" data-operator-group>
+                          <button class="segmented-option" type="button" role="radio" data-value="lt" aria-checked="true">中国联通</button>
+                          <button class="segmented-option" type="button" role="radio" data-value="yd" aria-checked="false">中国移动</button>
+                          <button class="segmented-option" type="button" role="radio" data-value="dx" aria-checked="false">中国电信</button>
+                          <button class="segmented-option" type="button" role="radio" data-value="hsd" aria-checked="false">校园本地</button>
+                        </div>
+                        <input type="hidden" id="operatorSelect2" value="lt" />
+                      </div>
+                    </div>
+                    <label class="field"><span class="field-label-row"><span class="field-label">上网密码</span><small class="field-hint" id="passwordConfigured2">首次配置必填</small></span><input class="input" id="passwordInput2" type="password" autocomplete="current-password" maxlength="128" placeholder="留空保留已存密码" /></label>
+                    <div class="field">
+                      <div class="field-label-row">
+                        <label class="field-label" for="portalInput2">校园门户地址</label>
+                        <button id="detectPortalButton2" class="btn btn-ghost btn-xs" type="button"><svg data-icon="refresh" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg>自动获取</button>
+                      </div>
+                      <textarea class="input" id="portalInput2" rows="3" placeholder="http://10.101.2.194:6060/portal.do?..." required></textarea>
+                    </div>
+                    <div class="grid-auto-md-end">
+                      <label class="field"><span class="field-label">检测间隔（秒）</span><input class="input" id="intervalInput2" type="number" min="5" max="3600" step="1" value="10" required /></label>
+                      <div class="row flush">
+                        <div class="row-text"><p class="row-title">系统启动时恢复</p><p class="row-desc">登录系统后自动恢复自动登录</p></div>
+                        <button class="switch" type="button" role="switch" id="autoStartSwitch2" aria-checked="false" aria-label="系统启动时恢复"><span class="switch-knob"></span></button>
+                        <input type="checkbox" id="autoStartInput2" hidden />
+                      </div>
+                    </div>
+                    <button id="saveButton2" class="btn btn-primary btn-lg w-full" type="submit">保存配置</button>
+                  </form>
+                </section>
+                <div class="stack">
+                  <section class="panel">
+                    <div class="panel-head"><span class="icon-tile"><svg data-icon="shield" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg></span><div class="panel-head-text"><h2 class="panel-title">凭据安全</h2></div></div>
+                    <div class="panel-body stack-md">
+                      <p class="row-desc mb0">密码在本机加密存储，配置摘要不会返回密码，页面只显示是否已配置。</p>
+                      <div class="chip chip-success" id="credChip"><span class="chip-dot"></span>已加密保存</div>
+                    </div>
+                  </section>
+                  <section class="panel">
+                    <div class="panel-head"><span class="icon-tile"><svg data-icon="globe" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-globe"/></svg></span><div class="panel-head-text"><h2 class="panel-title">当前账号</h2></div></div>
+                    <div class="rows border-top">
+                      <div class="row row-tight"><span class="row-desc mb0">账号</span><strong class="num-text fs-sm" id="infoAccount2">未配置</strong></div>
+                      <div class="row row-tight"><span class="row-desc mb0">运营商</span><strong class="num-text fs-sm" id="infoOperator2">—</strong></div>
+                      <div class="row row-tight"><span class="row-desc mb0">门户</span><strong class="num-text fs-sm" id="infoPortal2">—</strong></div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ======================================================== 设置对话框 -->
+    <dialog id="settingsDialog" class="overlay" aria-labelledby="settingsTitle">
+      <div class="dialog-panel dialog-panel-lg">
+        <div class="dialog-head">
+          <span class="icon-tile"><svg data-icon="sliders" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg></span>
+          <div class="grow">
+            <h2 id="settingsTitle">工作区设置</h2>
+            <p>更改会立即生效，并保存在此浏览器中。</p>
+          </div>
+          <button class="btn btn-ghost btn-icon" type="button" data-close-dialog="settingsDialog" aria-label="关闭设置"><svg data-icon="close" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button>
+        </div>
+        <div class="dialog-body">
+          <div class="tabs-wrap">
+            <div class="tabs" role="tablist" aria-label="设置分类">
+              <button class="tab" type="button" role="tab" id="tab-appearance" aria-selected="true" aria-controls="panel-appearance" data-settings-tab="appearance"><svg data-icon="palette" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-palette"/></svg>外观</button>
+              <button class="tab" type="button" role="tab" id="tab-layout" aria-selected="false" aria-controls="panel-layout" data-settings-tab="layout"><svg data-icon="layout" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-layout"/></svg>布局</button>
+              <button class="tab" type="button" role="tab" id="tab-motion" aria-selected="false" aria-controls="panel-motion" data-settings-tab="motion"><svg data-icon="zap" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zap"/></svg>动效</button>
+            </div>
+          </div>
+
+          <div id="panel-appearance" role="tabpanel" aria-labelledby="tab-appearance" class="animate-fade-in">
+            <div class="row">
+              <div class="row-text"><p class="row-title">主题</p><p class="row-desc">控制界面使用深色还是浅色表面。</p></div>
+              <div class="row-control">
+                <div class="segmented" role="radiogroup" aria-label="主题" data-setting="themeMode">
+                  <button class="segmented-option" type="button" role="radio" data-value="system" aria-checked="false">跟随系统</button>
+                  <button class="segmented-option" type="button" role="radio" data-value="light" aria-checked="false">浅色</button>
+                  <button class="segmented-option" type="button" role="radio" data-value="dark" aria-checked="true">深色</button>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <div class="row-text"><p class="row-title">源色</p><p class="row-desc">四组 Material 3 调色板，整套表面与强调色由它派生；也可以输入自定义 HEX。</p></div>
+              <div class="row-control">
+                <div class="swatches" role="radiogroup" aria-label="源色" data-setting="paletteId">
+                  <button class="swatch" type="button" role="radio" data-value="iris" aria-checked="true" title="#6750a4"><span class="swatch-dot swatch-iris"><svg data-icon="check" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></span><span class="swatch-label">Iris</span></button>
+                  <button class="swatch" type="button" role="radio" data-value="marine" aria-checked="false" title="#006a6a"><span class="swatch-dot swatch-marine"><svg data-icon="check" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></span><span class="swatch-label">Marine</span></button>
+                  <button class="swatch" type="button" role="radio" data-value="citrus" aria-checked="false" title="#695f00"><span class="swatch-dot swatch-citrus"><svg data-icon="check" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></span><span class="swatch-label">Citrus</span></button>
+                  <button class="swatch" type="button" role="radio" data-value="coral" aria-checked="false" title="#984061"><span class="swatch-dot swatch-coral"><svg data-icon="check" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></span><span class="swatch-label">Coral</span></button>
+                  <button class="swatch" type="button" role="radio" data-value="custom" aria-checked="false" title="自定义 HEX"><span class="swatch-dot" id="customSwatchDot"><svg data-icon="check" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></span><span class="swatch-label">自定义</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="row-text"><p class="row-title">HEX 颜色</p><p class="row-desc">Material 3 会根据此颜色生成具备良好可读性的色调调色板。</p></div>
+              <div class="row-control control-grow">
+                <div class="seed-row w-full">
+                  <span class="seed-preview" id="seedPreview"></span>
+                  <input class="input num-text" id="seedInput" value="#6750A4" maxlength="7" spellcheck="false" aria-label="HEX 颜色" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="row-text"><p class="row-title">生成的 Material 3 颜色角色</p><p class="row-desc">当前源色在主要颜色角色中的取值。</p></div>
+            </div>
+            <div class="role-preview mb-md">
+              <div class="role-cell"><div class="role-chip role-primary"></div><span>主色</span></div>
+              <div class="role-cell"><div class="role-chip role-container"></div><span>容器色</span></div>
+              <div class="role-cell"><div class="role-chip role-ink"></div><span>前景色</span></div>
+              <div class="role-cell"><div class="role-chip role-deep"></div><span>深层色</span></div>
+              <div class="role-cell"><div class="role-chip role-tertiary"></div><span>第三色</span></div>
+            </div>
+          </div>
+
+          <div id="panel-layout" role="tabpanel" aria-labelledby="tab-layout" class="animate-fade-in" hidden>
+            <div class="row">
+              <div class="row-text"><p class="row-title">密度</p><p class="row-desc">调整圆角与间距的基准，界面其余部分按比例缩放。</p></div>
+              <div class="row-control">
+                <div class="segmented" role="radiogroup" aria-label="密度" data-setting="density">
+                  <button class="segmented-option" type="button" role="radio" data-value="compact" aria-checked="false">紧凑</button>
+                  <button class="segmented-option" type="button" role="radio" data-value="standard" aria-checked="true">标准</button>
+                  <button class="segmented-option" type="button" role="radio" data-value="comfortable" aria-checked="false">舒适</button>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <div class="row-text"><p class="row-title">紧凑导航</p><p class="row-desc">在较大屏幕上使用图标栏，隐藏文字与状态卡。</p></div>
+              <div class="row-control"><button class="switch" type="button" role="switch" data-setting="compactNav" aria-checked="false" aria-label="紧凑导航"><span class="switch-knob"></span></button></div>
+            </div>
+          </div>
+
+          <div id="panel-motion" role="tabpanel" aria-labelledby="tab-motion" class="animate-fade-in" hidden>
+            <div class="row">
+              <div class="row-text"><p class="row-title">动效偏好</p><p class="row-desc">选择界面反馈的运动方式。</p></div>
+              <div class="row-control">
+                <div class="segmented" role="radiogroup" aria-label="动效偏好" data-setting="motion">
+                  <button class="segmented-option" type="button" role="radio" data-value="system" aria-checked="true">跟随系统</button>
+                  <button class="segmented-option" type="button" role="radio" data-value="full" aria-checked="false">完整</button>
+                  <button class="segmented-option" type="button" role="radio" data-value="reduced" aria-checked="false">减少</button>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <div class="row-text"><p class="row-title">预览</p><p class="row-desc">播放一段示例动画，确认当前动效偏好。</p></div>
+              <div class="row-control">
+                <button class="btn btn-soft" type="button" id="motionPreviewButton"><svg data-icon="play" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>播放</span></button>
+              </div>
+            </div>
+            <div id="motionPreviewStage" class="motion-stage">
+              <span class="motion-chip">淡入上移</span>
+              <span class="motion-chip">弹入</span>
+              <span class="motion-chip shimmer-chip">微光</span>
+            </div>
+          </div>
+        </div>
+        <div class="dialog-foot">
+          <button class="btn btn-ghost" type="button" id="settingsReset">全部重置</button>
+          <button class="btn btn-primary" type="button" data-close-dialog="settingsDialog">关闭设置</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- ======================================================== 搜索对话框 -->
+    <dialog id="searchDialog" class="overlay" aria-labelledby="searchTitle">
+      <div class="dialog-panel dialog-panel-lg">
+        <div class="dialog-head">
+          <span class="icon-tile"><svg data-icon="search" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg></span>
+          <div class="grow"><h2 id="searchTitle">搜索页面区块</h2></div>
+          <button class="btn btn-ghost btn-icon" type="button" data-close-dialog="searchDialog" aria-label="关闭搜索"><svg data-icon="close" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button>
+        </div>
+        <div class="search-field">
+          <svg data-icon="search" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="searchInput" type="search" aria-label="搜索页面区块" placeholder="搜索校园网、账号、日志…" autocomplete="off" />
+          <kbd>Esc</kbd>
+        </div>
+        <div id="searchResults" class="search-results">
+          <p class="search-group-label">页面</p>
+          <a class="search-item" href="#overview" data-search="总览 工作台 控制台 状态 网络概览"><span class="icon-tile"><svg data-icon="overview" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-overview"/></svg></span><span class="search-item-text"><strong>总览</strong><small>控制台 / 状态与快速操作</small></span><span class="enter-hint">↵</span></a>
+          <a class="search-item" href="#network" data-search="校园网 网络 登录 连接 自动登录"><span class="icon-tile"><svg data-icon="wifi" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wifi"/></svg></span><span class="search-item-text"><strong>校园网</strong><small>校园服务 / 网络管理</small></span><span class="enter-hint">↵</span></a>
+          <a class="search-item" href="#account" data-search="账号设置 密码 运营商 门户 检测间隔 自启"><span class="icon-tile"><svg data-icon="key" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg></span><span class="search-item-text"><strong>账号设置</strong><small>校园服务 / 账号与连接偏好</small></span><span class="enter-hint">↵</span></a>
+          <a class="search-item" href="#logs" data-search="运行日志 导出 记录 日志"><span class="icon-tile"><svg data-icon="log" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-log"/></svg></span><span class="search-item-text"><strong>运行日志</strong><small>校园服务 / 最近运行记录</small></span><span class="enter-hint">↵</span></a>
+          <a class="search-item" href="#guide" data-search="使用指南 帮助 说明 教程"><span class="icon-tile"><svg data-icon="help" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-help"/></svg></span><span class="search-item-text"><strong>使用指南</strong><small>工作区 / 帮助说明</small></span><span class="enter-hint">↵</span></a>
+          <p class="search-empty" id="searchEmpty" hidden>没有匹配的区块，试试「账号」或「日志」。</p>
+        </div>
+        <p class="search-foot"><span>↑↓ 选择 · Enter 打开 · Esc 关闭</span><span class="num">HTU Toolbox</span></p>
+      </div>
+    </dialog>
+
+    <!-- ======================================================== 帮助对话框 -->
+    <dialog id="helpDialog" class="overlay" aria-labelledby="helpTitle">
+      <div class="dialog-panel dialog-panel-lg">
+        <div class="dialog-head">
+          <span class="icon-tile"><svg data-icon="help" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-help"/></svg></span>
+          <div class="grow"><h2 id="helpTitle">使用指南</h2><p>连接、检测与后台运行的说明</p></div>
+          <button class="btn btn-ghost btn-icon" type="button" data-close-dialog="helpDialog" aria-label="关闭指南"><svg data-icon="close" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button>
+        </div>
+        <div class="dialog-body">
+          <div class="row"><div class="row-text"><p class="row-title">连接校园网</p><p class="row-desc">连接校园网络后，进入「校园网」，填写账号与运营商，点击「自动获取」门户地址。首次配置需要密码；以后留空会保留已存密码。点击「保存并连接」开启后台检测。</p></div></div>
+          <div class="divider"></div>
+          <div class="row"><div class="row-text"><p class="row-title">检测、登录与停止</p><p class="row-desc">「立即检测」只检查网络。「立即登录」提交一次认证，页面分别判断认证是否接受和公网是否联网。「停止自动登录」保存暂停状态，不会登出校园网。</p></div></div>
+          <div class="divider"></div>
+          <div class="row"><div class="row-text"><p class="row-title">后台运行与系统自启</p><p class="row-desc">关闭浏览器不会停止服务；退出服务进程才会结束后台运行。系统自启需要在本机安装用户服务，并开启「系统启动时恢复」。只有自动登录未暂停时才会恢复。</p></div></div>
+          <div class="divider"></div>
+          <div class="row"><div class="row-text"><p class="row-title">切换网络与日志</p><p class="row-desc">门户参数可能随网络变化失效，请重新获取并保存完整地址。日志支持查看最近 100、250 或 1000 行；导出的是当前已显示的内容。</p></div></div>
+        </div>
+        <div class="dialog-foot">
+          <span class="field-hint">配置保存在本机 · 页面不返回已存密码</span>
+          <button class="btn btn-primary" type="button" data-close-dialog="helpDialog">知道了</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toast-host" id="toastHost" role="status" aria-live="polite"></div>
+    <script type="module" src="/static/app.js"></script>
+  </body>
+</html>

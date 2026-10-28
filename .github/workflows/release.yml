@@ -1,0 +1,52 @@
+name: Publish Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: htu-connect-*
+          merge-multiple: true
+          path: release
+      - name: Verify version, source and checksums
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, tomllib, zipfile
+          from pathlib import Path
+          version = tomllib.loads(Path('Cargo.toml').read_text())['workspace']['package']['version']
+          assert os.environ['RELEASE_TAG'] == 'v' + version
+          packages = list(Path('release').glob('*.zip'))
+          assert len(packages) == 3, 'Missing platform package'
+          for package in packages:
+              digest, filename = Path(str(package) + '.sha256').read_text().strip().split('  ')
+              assert filename == package.name
+              assert hashlib.sha256(package.read_bytes()).hexdigest() == digest
+              with zipfile.ZipFile(package) as archive:
+                  metadata = json.loads(archive.read('RELEASE.json'))
+                  assert metadata['version'] == version
+                  assert metadata['source_commit'] == os.environ['GITHUB_SHA']
+          PY
+      - name: Publish verified desktop files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" release/* \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --prerelease \
+            --title "HTU Connect $RELEASE_TAG" --notes-file docs/release-notes.md

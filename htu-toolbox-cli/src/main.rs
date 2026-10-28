@@ -1,158 +1,140 @@
-use clap::Parser;
-use color_eyre::Section;
-use config::{Config, NetLoginCfg};
-use console::{style, Emoji};
-use eyre::Context;
-use htu_toolbox_lib::{config::NetLoginAccount, net::Operator};
-use net::{Net, NetAccArgs};
+use clap::{Parser, Subcommand};
+use htu_toolbox_lib::{http, net};
+use serde_json::{json, Value};
+use std::{
+    io::{self, IsTerminal, Read},
+    path::PathBuf,
+    process::ExitCode,
+};
 
-mod config;
-mod net;
-
-#[derive(Debug, Clone, clap::Parser)]
+#[derive(Parser)]
+#[command(version, about = "HTU Connect 本机服务客户端")]
 struct Args {
-    #[clap(subcommand)]
-    cmd: Option<SubCmd>,
+    /// 与桌面服务使用相同的数据目录
+    #[arg(long)]
+    runtime_dir: Option<PathBuf>,
+    #[command(subcommand)]
+    command: Command,
 }
-
-#[derive(Debug, Clone, clap::Subcommand)]
-enum SubCmd {
-    /// 校园网管理
+#[derive(Subcommand)]
+enum Command {
     Net {
-        #[clap(subcommand)]
-        cmd: Net,
+        #[command(subcommand)]
+        command: Net,
+    },
+}
+#[derive(Subcommand)]
+enum Net {
+    Status,
+    Check,
+    Login,
+    Logout,
+    Start,
+    Stop,
+    DetectPortal,
+    /// 从 stdin 读取配置 JSON；不会启动自动登录
+    Set,
+    Logs {
+        #[arg(long, default_value_t = 250)]
+        tail: u16,
     },
 }
 
-impl SubCmd {
-    pub fn execute(self) -> eyre::Result<()> {
-        match self {
-            SubCmd::Net {
-                cmd:
-                    net::Net::Login(NetAccArgs {
-                        id: Some(id),
-                        password: Some(pwd),
-                        operator: Some(operator),
-                    }),
-            } => {
-                if htu_toolbox_lib::net::ping().is_ok() {
-                    println!(
-                        "{} {}",
-                        Emoji::new("✅", "[!]"),
-                        style("网络可正常访问，无须登录校园网")
-                    );
-                    return Ok(());
-                }
-                println!(
-                    "{} {}",
-                    Emoji::new("🔎", "[?]",),
-                    style("获取登录页路径...")
-                );
-                let req = htu_toolbox_lib::net::AuthRequest::create(None)
-                    .with_context(|| "登录页请求失败")?;
-                let opr: Operator = operator.into();
-
-                println!("{} {}", Emoji::new("🔌", "[+]",), style("登录校园网..."));
-                let result = req
-                    .quick_auth(id, pwd, opr)
-                    .with_context(|| "校园网登录时发生错误")?;
-
-                if !result.success() {
-                    eyre::bail!(
-                        "校园网登录失败, 错误码 {}, 错误消息: {}",
-                        result.code,
-                        result.message.unwrap_or_default()
-                    )
-                }
-
-                println!("{} {}", Emoji::new("✅", "[√]"), style("校园网登录成功"));
-            }
-            SubCmd::Net {
-                cmd: net::Net::Logout,
-            } => {
-                println!("{} {}", Emoji::new("🔌", "[-]",), style("登出校园网..."));
-                let resp = htu_toolbox_lib::net::logout()
-                    .with_context(|| "登出请求失败")
-                    .with_suggestion(|| "或许你还没有连上校园网？")?;
-
-                if !resp.success() {
-                    eyre::bail!(
-                        "校园网登出失败, 错误码 {}, 错误消息: {}",
-                        resp.result,
-                        resp.msg,
-                    )
-                }
-            }
-            SubCmd::Net {
-                cmd: net::Net::Set(args),
-            } => {
-                let mut cfg = Config::load().with_context(|| "配置文件加载失败")?;
-                if args.id.is_none() {
-                    let account = net::account_guide()?;
-                    cfg.net_login = Some(NetLoginCfg { account })
-                } else {
-                    cfg.net_login = Some(NetLoginCfg {
-                        account: NetLoginAccount {
-                            id: args.id.unwrap(),
-                            password: args.password.unwrap(),
-                            operator: args.operator.unwrap().into(),
-                        },
-                    })
-                }
-                cfg.save().with_context(|| "配置文件保存失败")?;
-                println!(
-                    "{} {}",
-                    Emoji::new("✅", "[√]"),
-                    style("校园网账号设置成功")
-                );
-            }
-            _ => eyre::bail!("incorrect cmd args"),
-        }
-
-        Ok(())
-    }
-}
-
-fn wait_stdin() {
-    let mut input = String::new();
-    std::io::stdin().read_line(&mut input).unwrap();
-}
-
-fn run() -> eyre::Result<()> {
-    color_eyre::install()?;
-
+fn run() -> Result<(), String> {
     let args = Args::parse();
-    let mut cfg = Config::load().with_context(|| "配置文件加载失败")?;
-    let processed = if let Some(arg) = args.cmd {
-        match arg {
-            SubCmd::Net {
-                cmd: net::Net::Login(mut net_login_args),
-            } => {
-                if net_login_args.id.is_none() {
-                    cfg.ensure_net_login_account()
-                        .with_context(|| "配置文件创建失败")?;
-                    net_login_args = cfg.net_login.unwrap().into();
-                }
-                SubCmd::Net {
-                    cmd: net::Net::Login(net_login_args),
-                }
+    let directory = args
+        .runtime_dir
+        .map(Ok)
+        .unwrap_or_else(|| net::runtime_dir().map_err(|e| e.message))?;
+    let session: Value = serde_json::from_str(
+        &std::fs::read_to_string(directory.join("session.json"))
+            .map_err(|_| "桌面服务未运行或数据目录不正确。请先启动服务。")?,
+    )
+    .map_err(|_| "本机服务会话无效，请重启服务。")?;
+    let port = session["port"]
+        .as_u64()
+        .filter(|port| (1024..=65535).contains(port))
+        .ok_or("服务端口无效。")?;
+    let token = session["token"]
+        .as_str()
+        .filter(|token| {
+            !token.is_empty()
+                && token.len() <= 256
+                && token
+                    .bytes()
+                    .all(|c| c.is_ascii_alphanumeric() || b"_-".contains(&c))
+        })
+        .ok_or("服务令牌无效。")?;
+    let Command::Net { command } = args.command;
+    let (path, payload) = match command {
+        Net::Status => ("/api/status".into(), None),
+        Net::DetectPortal => ("/api/detect-portal".into(), None),
+        Net::Logs { tail } => (format!("/api/logs?tail={tail}"), None),
+        Net::Set => {
+            if io::stdin().is_terminal() {
+                return Err("请通过 stdin 提供配置 JSON。".into());
             }
-            cmd => cmd,
+            let mut text = String::new();
+            io::stdin()
+                .take(64 * 1024 + 1)
+                .read_to_string(&mut text)
+                .map_err(|_| "无法读取配置。")?;
+            if text.len() > 64 * 1024 {
+                return Err("配置请求过大。".into());
+            }
+            let payload: Value =
+                serde_json::from_str(&text).map_err(|_| "配置必须是 JSON 对象。")?;
+            if !payload.is_object() {
+                return Err("配置必须是 JSON 对象。".into());
+            }
+            ("/api/config".into(), Some(payload))
         }
-    } else {
-        cfg.into_sub_cmd()?
+        action => {
+            let name = match action {
+                Net::Check => "check",
+                Net::Login => "login",
+                Net::Logout => "logout",
+                Net::Start => "start",
+                Net::Stop => "stop",
+                _ => unreachable!(),
+            };
+            ("/api/action".into(), Some(json!({"action":name})))
+        }
     };
-
-    processed.execute().with_context(|| "指令执行失败")?;
-    println!("{} {}", Emoji::new("✅", "[√]"), style("按回车键继续..."));
-    wait_stdin();
+    let body = payload.map(|p| p.to_string().into_bytes());
+    let response = http::request(
+        &format!("http://127.0.0.1:{port}{path}"),
+        body.as_deref(),
+        &[
+            format!("X-HTU-Token: {token}"),
+            "Content-Type: application/json".into(),
+        ],
+        30,
+    )
+    .map_err(|e| e.message)?;
+    let reply: Value =
+        serde_json::from_slice(&response.body).map_err(|_| "本机服务没有返回有效 JSON。")?;
+    if response.code != 200 || reply["ok"] != true {
+        return Err(reply["error"]
+            .as_str()
+            .unwrap_or("本机服务操作失败。")
+            .into());
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&reply).map_err(|_| "无法输出结果。")?
+    );
+    if let Some(error) = reply["data"]["error"].as_str() {
+        return Err(error.into());
+    }
     Ok(())
 }
-
-fn main() {
-    let handle = std::thread::spawn(|| run().unwrap());
-    if handle.join().is_err() {
-        println!("{} {}", Emoji::new("❌", "[x]"), style("按回车键继续..."));
-        wait_stdin();
+fn main() -> ExitCode {
+    match run() {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(error) => {
+            eprintln!("{error}");
+            ExitCode::FAILURE
+        }
     }
 }

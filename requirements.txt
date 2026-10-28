@@ -1,0 +1,1 @@
+cryptography>=44,<51; sys_platform != 'win32'

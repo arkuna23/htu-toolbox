@@ -1,0 +1,53 @@
+name: Build desktop
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config
+      - run: python -m pip install -r requirements.txt
+      - name: Build and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            python scripts/build-core.py
+            cargo test --workspace --locked --jobs 2
+            cargo clippy --workspace --all-targets --locked -- -D warnings
+            cargo fmt --all --check
+            python -m unittest discover -s tests -v
+            for script in web/static/*.js web/static/vendor/morphicons/*.js; do
+              node --input-type=module --check < "$script"
+            done
+          } 2>&1 | tee "$RUNNER_TEMP/verify.log"
+      - name: Report failed verification
+        if: failure()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          log = Path(os.environ['RUNNER_TEMP']) / 'verify.log'
+          if log.exists():
+              text = log.read_text(encoding='utf-8', errors='replace')[-3500:]
+              print('::error::' + text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A'))
+          PY
+      - run: python scripts/package-release.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: htu-connect-${{ runner.os }}-${{ runner.arch }}
+          path: dist/htu-connect-*.zip*

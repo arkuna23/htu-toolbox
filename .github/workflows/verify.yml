@@ -1,0 +1,10 @@
+name: Verify
+on:
+  push:
+    branches: [master, "refactor/**"]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
